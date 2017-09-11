@@ -16,48 +16,21 @@ function getRepoContributors(repoOwner, repoName, cb) {
     }
   }
 
-
   request.get(reqObject, function(error, response, body) {
-    //console.log('error:', error);
-    //console.log('statusCode:', response && response.statusCode);
-    //console.log('Body:',body);
-
-
     if (response && response.statusCode == 200) {
       var json = JSON.parse(body);
       cb(json);
     }
   });
-  /*               // Note 1
-       .on('error', function (err) {                                   // Note 2
-         throw err;
-       })
-       .on('response', function (response) {                           // Note 3
-         console.log(response.body);
-       })
-       .on('end', function (response) {
-          console.log('End of data stream.')
-       });
-
-  */
 }
 
-function printURL(array) {
+function downloadImageByURL(array) {
   array.forEach(function(contributor) {
-    console.log('Avatar URL: ', contributor.avatar_url);
-  });
-}
-
-imageURL = "https://avatars2.githubusercontent.com/u/2741?v=3&s=466";
-imagePath =  "./avatars/kvirani.jpg";
-
-function downloadImageByURL(url, filePath) {
-  // ...
-  request.get(url)               // Note 1
-       .on('error', function (err) {                                   // Note 2
+     request.get(contributor.avatar_url)
+       .on('error', function (err) {
          throw err;
        })
-       .on('response', function (response) {                           // Note 3
+       .on('response', function (response) {
          console.log('Response Status Code: ', response.statusCode);
          console.log('Response Status Message:', response.statusMessage);
          console.log('Response Status Message:', response.headers['content-type']);
@@ -66,11 +39,8 @@ function downloadImageByURL(url, filePath) {
        .on('end', function (response) {
           console.log('Download complete.')
        })
-       .pipe(fs.createWriteStream(filePath));
+       .pipe(fs.createWriteStream("./avatars/" + contributor.login + ".jpg"));
+     });
 }
 
-
-// getRepoContributors("jquery", "jquery", printURL);
-downloadImageByURL(imageURL,imagePath);
-
-
+getRepoContributors("jquery", "jquery", downloadImageByURL);
