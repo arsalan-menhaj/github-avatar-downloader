@@ -16,10 +16,17 @@ function getRepoContributors(repoOwner, repoName, cb) {
     }
   }
 
+
   request.get(reqObject, function(error, response, body) {
-    console.log('error:', error);
-    console.log('statusCode:', response && response.statusCode);
-    console.log('Body:',body);
+    //console.log('error:', error);
+    //console.log('statusCode:', response && response.statusCode);
+    //console.log('Body:',body);
+
+
+    if (response && response.statusCode == 200) {
+      var json = JSON.parse(body);
+      cb(json);
+    }
   });
   /*               // Note 1
        .on('error', function (err) {                                   // Note 2
@@ -33,18 +40,12 @@ function getRepoContributors(repoOwner, repoName, cb) {
        });
 
   */
-
-  /*
-  if (response && response.statusCode == 200) {
-    var json = JSON.parse(body);
-    cb(json);
-    })
-  }
-  */
 }
 
+
+
 function printURL(array) {
-  array.foreach(function(contributor) {
+  array.forEach(function(contributor) {
     console.log('Avatar URL: ', contributor.avatar_url);
   });
 }
